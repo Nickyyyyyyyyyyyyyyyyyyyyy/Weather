@@ -1,0 +1,251 @@
+/* Базові налаштування та скидання стилів */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(to bottom, #4a6a8c, #3a4e6f); /* Градієнт фону */
+    color: #ffffff;
+    line-height: 1.5;
+    min-height: 100vh; /* Щоб фон займав весь екран */
+    padding: 15px; /* Відступи по краях для мобільних */
+}
+
+.weather-app {
+    max-width: 600px; /* Обмеження ширини на великих екранах */
+    margin: 0 auto; /* Центрування контейнера */
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Відстань між блоками */
+}
+
+/* Поточна погода - Заголовок */
+.current-weather {
+    text-align: center;
+    padding: 20px 0;
+    margin-bottom: 10px;
+}
+
+.location {
+    font-size: 1.8em; /* 28.8px */
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.temperature {
+    font-size: 4.5em; /* 72px */
+    font-weight: 300; /* Тонкий шрифт для температури */
+    margin-bottom: 0px;
+    line-height: 1; /* Зменшення міжрядкового інтервалу */
+}
+
+.description {
+    font-size: 1.2em; /* 19.2px */
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.85); /* Трохи прозорий текст */
+}
+
+.high-low {
+    font-size: 1.1em; /* 17.6px */
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.high-low span {
+    margin: 0 5px;
+}
+
+.search-input {
+    display: block; /* Щоб займав всю ширину */
+    width: 80%;
+    max-width: 300px; /* Обмеження ширини поля */
+    margin: 20px auto 0; /* Відступ зверху, центрування */
+    padding: 10px 15px;
+    border-radius: 20px; /* Округлені кути */
+    border: none;
+    background-color: rgba(255, 255, 255, 0.2); /* Напівпрозорий фон */
+    color: #ffffff;
+    font-size: 1em;
+    outline: none; /* Прибрати обводку при фокусі */
+    text-align: center;
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.7); /* Колір плейсхолдера */
+}
+
+
+/* Стилізація карток (секцій) */
+.card {
+    background-color: rgba(255, 255, 255, 0.1); /* Напівпрозорий білий фон */
+    border-radius: 15px; /* Округлені кути */
+    padding: 15px;
+    backdrop-filter: blur(5px); /* Ефект розмиття (не всюди підтримується) */
+    -webkit-backdrop-filter: blur(5px); /* Для Safari */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Тонка біла рамка */
+}
+
+.card h2 {
+    font-size: 0.9em; /* 14.4px */
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-transform: uppercase; /* Великі літери */
+    color: rgba(255, 255, 255, 0.7); /* Менш яскравий колір заголовка */
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Лінія під заголовком */
+}
+
+/* Погодинний прогноз */
+.hourly-forecast .hourly-scroll {
+    display: flex;
+    overflow-x: auto; /* Горизонтальна прокрутка */
+    padding-bottom: 10px; /* Місце для скролбару */
+    gap: 15px; /* Відстань між елементами */
+}
+
+/* Стилізація скролбару (для Webkit браузерів) */
+.hourly-scroll::-webkit-scrollbar {
+    height: 5px;
+}
+.hourly-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+.hourly-scroll::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.hour-item {
+    flex: 0 0 auto; /* Заборона розтягування */
+    min-width: 60px; /* Мінімальна ширина елемента */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px; /* Відстань між текстом, іконкою, температурою */
+}
+
+.hour-item .time {
+    font-size: 0.9em; /* 14.4px */
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.hour-item .icon {
+    font-size: 1.6em; /* 25.6px */
+}
+
+.hour-item .temp {
+    font-size: 1.1em; /* 17.6px */
+    font-weight: 500;
+}
+
+/* Прогноз на 10 днів */
+.daily-forecast .daily-list {
+    list-style: none; /* Прибрати маркери списку */
+}
+
+.day-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Розподілити елементи по ширині */
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Розділювач */
+    gap: 10px; /* Відстань між елементами */
+}
+
+.day-item:last-child {
+    border-bottom: none; /* Прибрати лінію в останнього елемента */
+}
+
+.day-item .day-name {
+    flex-basis: 60px; /* Фіксована ширина для дня тижня */
+    font-weight: 500;
+}
+
+.day-item .icon {
+    font-size: 1.4em; /* 22.4px */
+    flex-basis: 30px;
+    text-align: center;
+}
+
+.day-item .low-temp,
+.day-item .high-temp {
+    flex-basis: 35px; /* Фіксована ширина для температур */
+    text-align: right;
+    font-weight: 500;
+}
+.day-item .low-temp {
+     color: rgba(255, 255, 255, 0.7); /* Мінімальна температура менш яскрава */
+     text-align: left;
+}
+
+.temp-bar {
+    flex-grow: 1; /* Займати весь доступний простір */
+    height: 5px;
+    background-color: rgba(0, 0, 0, 0.2); /* Фон смужки */
+    border-radius: 3px;
+    margin: 0 10px; /* Відступи з боків */
+    overflow: hidden; /* Обрізати вміст */
+}
+
+.temp-range {
+    height: 100%;
+    background: linear-gradient(to right, #87ceeb, #ffcc00, #ff6347); /* Градієнт температур */
+    border-radius: 3px;
+}
+
+
+/* Додаткові деталі */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Дві колонки */
+    gap: 15px; /* Відстань між елементами */
+}
+
+.detail-item {
+    background-color: rgba(0, 0, 0, 0.1); /* Трохи темніший фон для елементів */
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.detail-item .label {
+    display: block;
+    font-size: 0.8em; /* 12.8px */
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.detail-item .value {
+    display: block;
+    font-size: 1.4em; /* 22.4px */
+    font-weight: 500;
+}
+
+/* Адаптивність (для прикладу, можна додати більше правил) */
+@media (min-width: 768px) {
+    body {
+        padding: 30px; /* Збільшити відступи на більших екранах */
+    }
+
+    .location {
+        font-size: 2.2em;
+    }
+
+    .temperature {
+        font-size: 5.5em;
+    }
+
+    .description, .high-low {
+        font-size: 1.3em;
+    }
+     .details-grid {
+        grid-template-columns: repeat(4, 1fr); /* Чотири колонки на планшетах/десктопах */
+    }
+}
