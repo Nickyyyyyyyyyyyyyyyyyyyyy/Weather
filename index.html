@@ -3,23 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apple Weather Style</title>
+  <title>Погода в стилі Apple Weather</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- Підключення Weather Icons для відображення погодних іконок -->
+  <!-- Підключаємо Weather Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
 </head>
 <body>
-  <!-- Фон, який змінюється динамічно залежно від погоди -->
+  <!-- Динамічний фон -->
   <div class="background"></div>
-  
-  <!-- Контейнер з інформацією про погоду -->
+
+  <!-- Основний контейнер -->
   <div class="weather-container">
+    <div class="current-weather">
       <div class="city" id="city">Kyiv</div>
-      <div class="weather-icon">
-          <i id="weather-icon" class="wi wi-day-sunny"></i>
+      <div class="current-details">
+        <i id="weather-icon" class="wi"></i>
+        <div class="temp" id="temperature">--°</div>
       </div>
-      <div class="temperature" id="temperature">--°</div>
       <div class="description" id="description">Завантаження...</div>
+    </div>
+    <div class="forecast">
+      <h2>Прогноз</h2>
+      <div class="forecast-container" id="forecast-container">
+        <!-- Прогнозові картки з'являться сюди -->
+      </div>
+    </div>
   </div>
   
   <script src="script.js"></script>
