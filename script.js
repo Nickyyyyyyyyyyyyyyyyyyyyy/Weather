@@ -1,34 +1,58 @@
 const apiKey = "c76c8138cf7428c36b661f8c9d07c12d";
-const city = "Kyiv";  // Можна змінити або зробити динамічний вибір міста
+const city = "Kyiv";
 
-async function fetchWeather() {
+async function fetchWeatherData() {
   try {
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`);
-    if (!response.ok) throw new Error("Network response error");
-    
-    const data = await response.json();
-    updateWeather(data);
+    // Отримуємо поточну погоду
+    const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`);
+    const weatherData = await weatherResponse.json();
+    updateCurrentWeather(weatherData);
+
+    // Отримуємо прогноз погоди
+    const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`);
+    const forecastData = await forecastResponse.json();
+    updateForecast(forecastData);
   } catch (error) {
-    console.error("Fetch Error:", error);
+    console.error("Помилка отримання даних:", error);
   }
 }
 
-function updateWeather(data) {
-  const temperatureElem = document.getElementById("temperature");
-  const descriptionElem = document.getElementById("description");
-  const cityElem = document.getElementById("city");
+function updateCurrentWeather(data) {
+  document.getElementById("city").textContent = data.name;
+  document.getElementById("temperature").textContent = `${Math.round(data.main.temp)}°`;
+  document.getElementById("description").textContent = data.weather[0].description;
   
-  // Оновлюємо дані
-  cityElem.textContent = data.name;
-  temperatureElem.textContent = `${Math.round(data.main.temp)}°`;
-  descriptionElem.textContent = data.weather[0].description;
-  
-  // Оновлення погодної іконки
+  // Оновлюємо іконку погодних умов
   const iconCode = data.weather[0].icon;
   document.getElementById("weather-icon").className = `wi ${getWeatherIcon(iconCode)}`;
   
-  // Зміна фону залежно від основного типу погоди
+  // Змінюємо фон залежно від погоди
   updateBackground(data.weather[0].main, iconCode);
+}
+
+function updateForecast(data) {
+  const forecastContainer = document.getElementById("forecast-container");
+  forecastContainer.innerHTML = "";
+  
+  // Фільтруємо записи за часом "12:00:00", щоб отримати прогноз для кожного дня
+  const dailyData = data.list.filter(item => item.dt_txt.includes("12:00:00"));
+  
+  dailyData.forEach(item => {
+    const date = new Date(item.dt * 1000);
+    const options = { weekday: 'short' };
+    const dayName = date.toLocaleDateString('uk-UA', options);
+    const temp = Math.round(item.main.temp);
+    const iconCode = item.weather[0].icon;
+    
+    const dayDiv = document.createElement("div");
+    dayDiv.classList.add("forecast-day");
+    dayDiv.innerHTML = `
+      <div class="day">${dayName}</div>
+      <div class="icon"><i class="wi ${getWeatherIcon(iconCode)}"></i></div>
+      <div class="temp">${temp}°</div>
+    `;
+    forecastContainer.appendChild(dayDiv);
+  });
 }
 
 function getWeatherIcon(code) {
@@ -59,7 +83,7 @@ function updateBackground(weatherMain, icon) {
   const background = document.querySelector(".background");
   let gradient = "";
   
-  // Налаштування градієнту залежно від загальної погоди
+  // Налаштовуємо фон залежно від основного типу погоди
   switch (weatherMain.toLowerCase()) {
     case "clear":
       gradient = icon.includes("d") ?
@@ -87,10 +111,10 @@ function updateBackground(weatherMain, icon) {
       gradient = "linear-gradient(135deg, #757F9A, #D7DDE8)";
       break;
     default:
-      gradient = "linear-gradient(135deg, #364F6B, #3FC1C9)";
+      gradient = "linear-gradient(135deg, #1E1E1E, #007AFF)";
   }
   
   background.style.background = gradient;
 }
 
-fetchWeather();
+fetchWeatherData();
