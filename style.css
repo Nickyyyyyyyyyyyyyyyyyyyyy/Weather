@@ -1,0 +1,236 @@
+/* Базові налаштування та скидання стилів */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px; /* Базовий розмір шрифту */
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(to bottom, #4a6a8c, #3a4e6f);
+    color: #ffffff;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 15px;
+}
+
+.weather-app {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* --- Поточна погода --- */
+.current-weather {
+    text-align: center;
+    padding: 10px 0 0 0; /* Зменшено відступ знизу */
+    margin-bottom: 10px;
+}
+
+.location {
+    font-size: 1.9rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    min-height: 1.2em; /* Резерв місця під час завантаження */
+}
+
+.temperature {
+    font-size: 4.8rem;
+    font-weight: 300;
+    margin-bottom: 0px;
+    line-height: 1;
+    min-height: 1.1em;
+}
+
+.description {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    min-height: 1.2em;
+}
+
+.high-low {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    min-height: 1.2em;
+    margin-bottom: 15px; /* Відступ перед пошуком */
+}
+
+.high-low span {
+    margin: 0 8px;
+}
+
+/* --- Форма пошуку --- */
+.search-form {
+    display: flex; /* Розмістити інпут і кнопку в ряд */
+    justify-content: center; /* Центрувати елементи */
+    align-items: center;
+    margin: 0 auto 10px auto; /* Відступи */
+    max-width: 350px; /* Обмеження ширини */
+    width: 90%;
+}
+
+.search-input {
+    flex-grow: 1; /* Інпут займає доступний простір */
+    padding: 10px 15px;
+    border-radius: 20px 0 0 20px; /* Округлення зліва */
+    border: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 500;
+    outline: none;
+    text-align: left; /* Вирівнювання тексту зліва */
+}
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 400;
+}
+
+.search-button {
+    padding: 10px 12px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.25); /* Трохи інший фон */
+    color: #ffffff;
+    border-radius: 0 20px 20px 0; /* Округлення справа */
+    cursor: pointer;
+    font-size: 1.1rem;
+    outline: none;
+    transition: background-color 0.2s ease;
+}
+.search-button:hover {
+    background-color: rgba(255, 255, 255, 0.35);
+}
+/* Якщо кнопка не потрібна візуально:
+.search-button {
+    display: none;
+}
+.search-input {
+    border-radius: 20px; // Повне округлення інпуту
+    text-align: center;
+}
+*/
+
+/* --- Картки --- */
+.card {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 15px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    position: relative; /* Для позиціонування повідомлень */
+    overflow: hidden; /* Щоб повідомлення не вилазили */
+}
+
+.card h2 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* --- Повідомлення стану (Завантаження/Помилка) --- */
+.status-message {
+    padding: 10px;
+    text-align: center;
+    font-weight: 500;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: none; /* Сховано за замовчуванням */
+}
+.loading-indicator {
+    color: rgba(255, 255, 255, 0.8);
+}
+.error-message {
+    color: #ffdddd; /* Світло-червоний текст */
+    background-color: rgba(200, 0, 0, 0.3); /* Напівпрозорий червоний фон */
+}
+#current-error { /* Помилка для поточної погоди (не в картці) */
+     color: #ffdddd;
+     font-weight: 500;
+     margin-top: 5px;
+     min-height: 1.2em;
+}
+
+/* --- Погодинний прогноз --- */
+.hourly-forecast .hourly-scroll {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    gap: 15px;
+    min-height: 80px; /* Резерв місця під час завантаження */
+}
+.hourly-scroll::-webkit-scrollbar { height: 5px; }
+.hourly-scroll::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.3); border-radius: 10px; }
+.hourly-scroll::-webkit-scrollbar-track { background-color: transparent; }
+
+.hour-item {
+    flex: 0 0 auto;
+    min-width: 65px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+.hour-item .time { font-size: 0.9rem; font-weight: 600; color: rgba(255, 255, 255, 0.9); }
+.hour-item .icon { font-size: 1.7rem; }
+.hour-item .temp { font-size: 1.2rem; font-weight: 600; }
+
+/* --- Денний прогноз --- */
+.daily-forecast .daily-list {
+    list-style: none;
+    min-height: 150px; /* Резерв місця */
+}
+
+.day-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    gap: 10px;
+}
+.day-item:last-child { border-bottom: none; }
+
+.day-item .day-name { flex-basis: 70px; font-weight: 600; font-size: 1.05rem; }
+.day-item .icon { font-size: 1.5rem; flex-basis: 35px; text-align: center; }
+.day-item .low-temp,
+.day-item .high-temp { flex-basis: 40px; text-align: right; font-weight: 600; font-size: 1.05rem; }
+.day-item .low-temp { color: rgba(255, 255, 255, 0.8); text-align: left; }
+
+.temp-bar {
+    flex-grow: 1; height: 5px; background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px; margin: 0 10px; overflow: hidden; position: relative;
+}
+.temp-range {
+    height: 100%; background: linear-gradient(to right, #87ceeb, #ffcc00, #ff6347);
+    border-radius: 3px; position: absolute; top: 0; left: 0;
+}
+
+/* --- Додаткові деталі --- */
+.details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.detail-item { background-color: rgba(0, 0, 0, 0.1); padding: 15px; border-radius: 10px; text-align: center; }
+.detail-item .label { display: block; font-size: 0.85rem; color: rgba(255, 255, 255, 0.75); margin-bottom: 5px; text-transform: uppercase; font-weight: 600; }
+.detail-item .value { display: block; font-size: 1.5rem; font-weight: 600; min-height: 1.2em; }
+
+/* --- Адаптивність --- */
+@media (min-width: 768px) {
+    body { padding: 30px; }
+    .location { font-size: 2.3rem; }
+    .temperature { font-size: 6rem; }
+    .description, .high-low { font-size: 1.4rem; }
+    .details-grid { grid-template-columns: repeat(4, 1fr); }
+}
