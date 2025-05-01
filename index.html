@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="background"></div>
     <header>
         <h1>Прогноз погоди</h1>
     </header>
@@ -15,12 +16,18 @@
             <input type="text" id="cityInput" placeholder="Введіть назву міста">
             <button id="getWeather">Отримати погоду</button>
         </section>
-        <section id="weather">
-            <!-- Тут буде відображатися інформація про погоду -->
+        <section id="currentWeather"></section>
+        <section id="hourlyForecast">
+            <h3>Погодинний прогноз</h3>
+            <div id="hourlyWeather"></div>
+        </section>
+        <section id="dailyForecast">
+            <h3>10-денний прогноз</h3>
+            <div id="dailyWeather"></div>
         </section>
     </main>
     <footer>
-        <p>© 2023 Прогноз погоди</p>
+        <p>© 2025 Прогноз погоди</p>
     </footer>
     <script src="script.js"></script>
 </body>
