@@ -1,168 +1,68 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather Forecast</title>
-  <style>
-    /* Apple Weather-inspired style */
-    :root {
-      --bg-gradient-start: #4facfe;
-      --bg-gradient-end: #00f2fe;
-      --card-bg: rgba(255, 255, 255, 0.2);
-      --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      --text-color: #fff;
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: var(--font-family);
-      color: var(--text-color);
-      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .weather-app {
-      backdrop-filter: blur(20px);
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 30px;
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
-    .search {
-      margin-bottom: 20px;
-    }
-    .search input {
-      width: 70%;
-      padding: 10px;
-      border: none;
-      border-radius: 10px 0 0 10px;
-      outline: none;
-      font-size: 1rem;
-    }
-    .search button {
-      padding: 10px;
-      border: none;
-      border-radius: 0 10px 10px 0;
-      background: rgba(255,255,255,0.3);
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    .current {
-      margin: 20px 0;
-    }
-    .current h1 {
-      font-size: 2.5rem;
-    }
-    .current .temp {
-      font-size: 4rem;
-      font-weight: 600;
-    }
-    .current .details {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 10px;
-      font-size: 1rem;
-    }
-    .forecast {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
-    }
-    .forecast .day {
-      flex: 1;
-      text-align: center;
-      font-size: 0.9rem;
-    }
-    .forecast .day img {
-      width: 40px;
-      height: 40px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогноз Погоди</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="weather-app">
-    <div class="search">
-      <input type="text" id="city-input" placeholder="Enter city" />
-      <button id="search-btn">🔍</button>
-    </div>
-    <div class="current">
-      <h1 id="city-name">--</h1>
-      <div class="temp" id="temp">--°C</div>
-      <div class="details">
-        <div>Humidity: <span id="humidity">--%</span></div>
-        <div>Wind: <span id="wind">-- m/s</span></div>
-      </div>
-    </div>
-    <div class="forecast" id="forecast">
-      <!-- Forecast days here -->
-    </div>
-  </div>  <script>
-    const apiKey = 'c76c8138cf7428c36b661f8c9d07c12d';
-    const searchBtn = document.getElementById('search-btn');
-    const cityInput = document.getElementById('city-input');
+    <main class="weather-app">
+        <header class="current-weather">
+            <div class="location" id="location">--</div>
+            <div class="temperature" id="current-temp">-°</div>
+            <div class="description" id="current-desc">Завантаження...</div>
+            <div class="high-low">
+                <span id="current-high">Макс: -°</span>
+                <span id="current-low">Мін: -°</span>
+            </div>
+             <form id="search-form" class="search-form">
+                <input type="text" id="search-input" class="search-input" placeholder="Пошук міста..." aria-label="Пошук міста">
+                <button type="submit" class="search-button" aria-label="Знайти">🔍</button> </form>
+             <div class="error-message" id="current-error"></div>
+        </header>
 
-    searchBtn.addEventListener('click', () => {
-      const city = cityInput.value.trim();
-      if (city) fetchWeather(city);
-    });
+        <section class="hourly-forecast card">
+            <h2>Погодинний прогноз</h2>
+            <div class="status-message loading-indicator" id="hourly-loading">Завантаження...</div>
+            <div class="status-message error-message" id="hourly-error"></div>
+            <div class="hourly-scroll" id="hourly-scroll-container">
+                </div>
+        </section>
 
-    async function fetchWeather(city) {
-      try {
-        // Fetch current weather
-        const resCurrent = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
-        );
-        const dataCurrent = await resCurrent.json();
-        updateCurrent(dataCurrent);
+        <section class="daily-forecast card">
+            <h2>Прогноз на 5 днів</h2>
+             <div class="status-message loading-indicator" id="daily-loading">Завантаження...</div>
+             <div class="status-message error-message" id="daily-error"></div>
+            <ul class="daily-list" id="daily-list-container">
+                </ul>
+        </section>
 
-        // Fetch 5-day forecast
-        const resForecast = await fetch(
-          `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`
-        );
-        const dataForecast = await resForecast.json();
-        updateForecast(dataForecast);
-      } catch (err) {
-        alert('City not found');
-      }
-    }
+        <section class="details card">
+             <h2>Додаткові відомості</h2>
+             <div class="details-grid">
+                 <div class="detail-item">
+                     <span class="label">Відчувається як</span>
+                     <span class="value" id="feels-like">-°</span>
+                 </div>
+                 <div class="detail-item">
+                     <span class="label">Вологість</span>
+                     <span class="value" id="humidity">-%</span>
+                 </div>
+                  <div class="detail-item">
+                     <span class="label">Вітер</span>
+                     <span class="value" id="wind">- м/с</span>
+                 </div>
+                 <div class="detail-item">
+                     <span class="label">Тиск</span>
+                     <span class="value" id="pressure">- гПа</span>
+                 </div>
+             </div>
+        </section>
 
-    function updateCurrent(data) {
-      document.getElementById('city-name').textContent = data.name;
-      document.getElementById('temp').textContent = `${Math.round(data.main.temp)}°C`;
-      document.getElementById('humidity').textContent = `${data.main.humidity}%`;
-      document.getElementById('wind').textContent = `${data.wind.speed} m/s`;
-    }
-
-    function updateForecast(data) {
-      const forecastEl = document.getElementById('forecast');
-      forecastEl.innerHTML = '';
-      // Get forecasts at 12:00 each day
-      const daily = data.list.filter(item => item.dt_txt.includes('12:00:00')).slice(0, 5);
-      daily.forEach(day => {
-        const date = new Date(day.dt_txt);
-        const options = { weekday: 'short' };
-        const dayName = date.toLocaleDateString('en-US', options);
-        const iconUrl = `https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`;
-        const temp = `${Math.round(day.main.temp)}°C`;
-
-        const dayEl = document.createElement('div');
-        dayEl.className = 'day';
-        dayEl.innerHTML = `
-          <div>${dayName}</div>
-          <img src="${iconUrl}" alt="weather icon" />
-          <div>${temp}</div>
-        `;
-        forecastEl.appendChild(dayEl);
-      });
-    }
-  </script></body>
+    </main> <script src="script.js"></script>
+</body>
 </html>
