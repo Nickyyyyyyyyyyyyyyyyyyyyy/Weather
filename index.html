@@ -3,126 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Прогноз Погоди</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Прогноз погоди</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="weather-app">
-        <header class="current-weather">
-            <div class="location" id="location">Київ</div>
-            <div class="temperature" id="current-temp">14°</div>
-            <div class="description" id="current-desc">Хмарно з проясненнями</div>
-            <div class="high-low">
-                <span id="current-high">Макс: 18°</span>
-                <span id="current-low">Мін: 9°</span>
-            </div>
-            <input type="text" class="search-input" placeholder="Пошук міста...">
-        </header>
-
-        <section class="hourly-forecast card">
-            <h2>Погодинний прогноз</h2>
-            <div class="hourly-scroll">
-                <div class="hour-item">
-                    <div class="time">Зараз</div>
-                    <div class="icon">☁️</div>
-                    <div class="temp">14°</div>
-                </div>
-                <div class="hour-item">
-                    <div class="time">19:00</div>
-                    <div class="icon">☁️</div>
-                    <div class="temp">13°</div>
-                </div>
-                <div class="hour-item">
-                    <div class="time">20:00</div>
-                    <div class="icon">🌙</div>
-                    <div class="temp">12°</div>
-                </div>
-                <div class="hour-item">
-                    <div class="time">21:00</div>
-                    <div class="icon">🌙</div>
-                    <div class="temp">11°</div>
-                </div>
-                <div class="hour-item">
-                    <div class="time">22:00</div>
-                    <div class="icon">🌙</div>
-                    <div class="temp">10°</div>
-                </div>
-                 <div class="hour-item">
-                    <div class="time">23:00</div>
-                    <div class="icon">🌧️</div>
-                    <div class="temp">10°</div>
-                </div>
-                </div>
+    <header>
+        <h1>Прогноз погоди</h1>
+    </header>
+    <main>
+        <section id="search">
+            <input type="text" id="cityInput" placeholder="Введіть назву міста">
+            <button id="getWeather">Отримати погоду</button>
         </section>
-
-        <section class="daily-forecast card">
-            <h2>Прогноз на 10 днів</h2>
-            <ul class="daily-list">
-                <li class="day-item">
-                    <span class="day-name">Сьогодні</span>
-                    <span class="icon">☁️</span>
-                    <span class="low-temp">9°</span>
-                    <div class="temp-bar">
-                        <div class="temp-range" style="margin-left: 25%; width: 50%;"></div> </div>
-                    <span class="high-temp">18°</span>
-                </li>
-                 <li class="day-item">
-                    <span class="day-name">Чт</span>
-                    <span class="icon">☀️</span>
-                    <span class="low-temp">10°</span>
-                     <div class="temp-bar">
-                        <div class="temp-range" style="margin-left: 30%; width: 60%;"></div>
-                    </div>
-                    <span class="high-temp">21°</span>
-                </li>
-                <li class="day-item">
-                    <span class="day-name">Пт</span>
-                    <span class="icon">🌧️</span>
-                    <span class="low-temp">12°</span>
-                     <div class="temp-bar">
-                        <div class="temp-range" style="margin-left: 40%; width: 45%;"></div>
-                    </div>
-                    <span class="high-temp">19°</span>
-                </li>
-                <li class="day-item">
-                    <span class="day-name">Сб</span>
-                    <span class="icon">☀️</span>
-                    <span class="low-temp">11°</span>
-                     <div class="temp-bar">
-                        <div class="temp-range" style="margin-left: 35%; width: 65%;"></div>
-                    </div>
-                    <span class="high-temp">23°</span>
-                </li>
-                 </ul>
+        <section id="weather">
+            <!-- Тут буде відображатися інформація про погоду -->
         </section>
-
-        <section class="details card">
-             <h2>Додаткові відомості</h2>
-             <div class="details-grid">
-                 <div class="detail-item">
-                     <span class="label">Відчувається як</span>
-                     <span class="value" id="feels-like">13°</span>
-                 </div>
-                 <div class="detail-item">
-                     <span class="label">Вологість</span>
-                     <span class="value" id="humidity">75%</span>
-                 </div>
-                  <div class="detail-item">
-                     <span class="label">Вітер</span>
-                     <span class="value" id="wind">5 м/с</span>
-                 </div>
-                 <div class="detail-item">
-                     <span class="label">Тиск</span>
-                     <span class="value" id="pressure">1012 гПа</span>
-                 </div>
-             </div>
-        </section>
-
-    </div>
-
+    </main>
+    <footer>
+        <p>&copy; 2023 Прогноз погоди</p>
+    </footer>
     <script src="script.js"></script>
 </body>
 </html>
