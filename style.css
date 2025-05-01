@@ -1,15 +1,31 @@
 body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom, #87CEEB, #FFFFFF);
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     margin: 0;
     padding: 0;
+    color: #fff;
+    position: relative;
+    overflow-x: hidden;
+}
+
+#background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(to bottom, #1E3A8A, #3B82F6);
+    opacity: 0.9;
 }
 
 header {
     text-align: center;
     padding: 20px;
-    background-color: #FFFFFF;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 1.5em;
+    font-weight: 500;
 }
 
 main {
@@ -25,50 +41,86 @@ main {
     padding: 10px;
     font-size: 16px;
     width: 200px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+#cityInput::placeholder {
+    color: #ccc;
 }
 
 #getWeather {
     padding: 10px 20px;
     font-size: 16px;
     background-color: #007AFF;
-    color: #FFFFFF;
+    color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
+    margin-left: 10px;
 }
 
-#weather {
-    background-color: #FFFFFF;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+#currentWeather, #hourlyForecast, #dailyForecast {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
     padding: 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+}
+
+#currentWeather h2 {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+#currentWeather .temp {
+    font-size: 4em;
+    font-weight: 300;
+    margin: 10px 0;
+}
+
+#currentWeather .description {
+    font-size: 1.2em;
+    text-transform: capitalize;
+}
+
+#hourlyForecast h3, #dailyForecast h3 {
+    font-size: 1.2em;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+#hourlyWeather, #dailyWeather {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+}
+
+.hourly-card, .daily-card {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 10px;
     text-align: center;
+    min-width: 80px;
 }
 
 footer {
     text-align: center;
     padding: 10px;
-    background-color: #FFFFFF;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 600px) {
-    header {
-        padding: 10px;
-    }
-    main {
-        padding: 10px;
-    }
-    #weather {
-        padding: 10px;
-    }
     #cityInput {
         width: 100%;
+        margin-bottom: 10px;
     }
     #getWeather {
         width: 100%;
-        margin-top: 10px;
+        margin-left: 0;
+    }
+    #currentWeather .temp {
+        font-size: 3em;
     }
 }
