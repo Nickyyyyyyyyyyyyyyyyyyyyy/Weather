@@ -1,275 +1,74 @@
-/* Базові налаштування та скидання стилів */
-* {
-    box-sizing: border-box;
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #87CEEB, #FFFFFF);
     margin: 0;
     padding: 0;
 }
 
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: linear-gradient(to bottom, #4a6a8c, #3a4e6f); /* Градієнт фону */
-    color: #ffffff;
-    line-height: 1.5;
-    min-height: 100vh; /* Щоб фон займав весь екран */
-    padding: 15px; /* Відступи по краях для мобільних */
-}
-
-.weather-app {
-    max-width: 600px; /* Обмеження ширини на великих екранах */
-    margin: 0 auto; /* Центрування контейнера */
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Відстань між блоками */
-}
-
-/* Поточна погода - Заголовок */
-.current-weather {
+header {
     text-align: center;
-    padding: 20px 0;
-    margin-bottom: 10px;
+    padding: 20px;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.location {
-    font-size: 1.9em; /* Збільшено */
-    font-weight: 600; /* Жирніше */
-    margin-bottom: 5px;
+main {
+    padding: 20px;
 }
 
-.temperature {
-    font-size: 4.8em; /* Збільшено */
-    font-weight: 300; /* Залишаємо тонким для контрасту */
-    margin-bottom: 0px;
-    line-height: 1;
+#search {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.description {
-    font-size: 1.3em; /* Збільшено */
-    font-weight: 500; /* Жирніше */
-    margin-bottom: 10px;
-    color: rgba(255, 255, 255, 0.9); /* Трохи яскравіше */
+#cityInput {
+    padding: 10px;
+    font-size: 16px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
-.high-low {
-    font-size: 1.2em; /* Збільшено */
-    font-weight: 600; /* Жирніше */
-    color: rgba(255, 255, 255, 0.95);
-}
-
-.high-low span {
-    margin: 0 8px; /* Трохи більше відстані */
-}
-
-.search-input {
-    display: block;
-    width: 80%;
-    max-width: 300px;
-    margin: 20px auto 0;
-    padding: 10px 15px;
-    border-radius: 20px;
+#getWeather {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007AFF;
+    color: #FFFFFF;
     border: none;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    font-size: 1em;
-    font-weight: 500; /* Жирніше */
-    outline: none;
-    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.search-input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: 400; /* Звичайний для плейсхолдера */
-}
-
-
-/* Стилізація карток (секцій) */
-.card {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 15px;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.card h2 {
-    font-size: 0.9em;
-    font-weight: 700; /* Дуже жирний заголовок */
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.8); /* Трохи яскравіше */
-    padding-bottom: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* Погодинний прогноз */
-.hourly-forecast .hourly-scroll {
-    display: flex;
-    overflow-x: auto;
-    padding-bottom: 10px;
-    gap: 15px;
-}
-/* Додамо текст, якщо завантаження прогнозу не вдалося */
-.hourly-forecast .hourly-scroll p {
-    width: 100%;
-    text-align: center;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-
-/* Стилізація скролбару (для Webkit браузерів) */
-.hourly-scroll::-webkit-scrollbar {
-    height: 5px;
-}
-.hourly-scroll::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.3);
+#weather {
+    background-color: #FFFFFF;
     border-radius: 10px;
-}
-.hourly-scroll::-webkit-scrollbar-track {
-    background-color: transparent;
-}
-
-.hour-item {
-    flex: 0 0 auto;
-    min-width: 65px; /* Трохи ширше */
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-}
-
-.hour-item .time {
-    font-size: 0.9em;
-    font-weight: 600; /* Жирніше */
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.hour-item .icon {
-    font-size: 1.7em; /* Збільшено */
-}
-
-.hour-item .temp {
-    font-size: 1.2em; /* Збільшено */
-    font-weight: 600; /* Жирніше */
-}
-
-/* Прогноз на 10 днів */
-.daily-forecast .daily-list {
-    list-style: none;
-}
-/* Додамо текст, якщо завантаження прогнозу не вдалося */
-.daily-forecast .daily-list p {
-    width: 100%;
-    text-align: center;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.day-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 11px 0; /* Трохи більше */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    gap: 10px;
-}
-
-.day-item:last-child {
-    border-bottom: none;
-}
-
-.day-item .day-name {
-    flex-basis: 70px; /* Трохи ширше */
-    font-weight: 600; /* Жирніше */
-    font-size: 1.05em; /* Збільшено */
-}
-
-.day-item .icon {
-    font-size: 1.5em; /* Збільшено */
-    flex-basis: 35px; /* Трохи ширше */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
     text-align: center;
 }
 
-.day-item .low-temp,
-.day-item .high-temp {
-    flex-basis: 40px; /* Трохи ширше */
-    text-align: right;
-    font-weight: 600; /* Жирніше */
-    font-size: 1.05em; /* Збільшено */
-}
-.day-item .low-temp {
-     color: rgba(255, 255, 255, 0.8); /* Менш яскрава */
-     text-align: left;
-}
-
-.temp-bar {
-    flex-grow: 1;
-    height: 5px;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 3px;
-    margin: 0 10px;
-    overflow: hidden;
-    position: relative; /* Для позиціонування range */
-}
-
-.temp-range {
-    height: 100%;
-    background: linear-gradient(to right, #87ceeb, #ffcc00, #ff6347);
-    border-radius: 3px;
-    position: absolute; /* Абсолютне позиціонування */
-    top: 0;
-    left: 0; /* За замовчуванням починається зліва */
-}
-
-
-/* Додаткові деталі */
-.details-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-.detail-item {
-    background-color: rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    border-radius: 10px;
+footer {
     text-align: center;
+    padding: 10px;
+    background-color: #FFFFFF;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.detail-item .label {
-    display: block;
-    font-size: 0.85em; /* Збільшено */
-    color: rgba(255, 255, 255, 0.75);
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    font-weight: 600; /* Жирніше */
-}
-
-.detail-item .value {
-    display: block;
-    font-size: 1.5em; /* Збільшено */
-    font-weight: 600; /* Жирніше */
-}
-
-/* Адаптивність */
-@media (min-width: 768px) {
-    body {
-        padding: 30px;
+@media (max-width: 600px) {
+    header {
+        padding: 10px;
     }
-
-    .location {
-        font-size: 2.3em;
+    main {
+        padding: 10px;
     }
-
-    .temperature {
-        font-size: 6em;
+    #weather {
+        padding: 10px;
     }
-
-    .description, .high-low {
-        font-size: 1.4em;
+    #cityInput {
+        width: 100%;
     }
-     .details-grid {
-        grid-template-columns: repeat(4, 1fr);
+    #getWeather {
+        width: 100%;
+        margin-top: 10px;
     }
 }
