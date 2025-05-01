@@ -1,4 +1,4 @@
-/* Загальні стилі та скидання відступів */
+/* Скидання базових стилів */
 * {
   margin: 0;
   padding: 0;
@@ -7,61 +7,111 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  height: 100vh;
-  position: relative;
+  background: #000;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100vh;
   color: white;
 }
 
-/* Фоновий градієнт, який змінюється за допомогою JavaScript із плавним переходом */
+/* Фоновий градієнт із плавним переходом */
 .background {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #364F6B, #3FC1C9);
-  z-index: -2;
+  background: linear-gradient(135deg, #1E1E1E, #007AFF);
+  z-index: -1;
   transition: background 0.5s ease;
 }
 
-/* Стиль контейнера – нагадує картки iOS: напівпрозорий фон, округлені кути, розмиття */
+/* Контейнер у стилі картки (як у iOS) */
 .weather-container {
   position: relative;
+  max-width: 400px;
   width: 90%;
-  max-width: 350px;
-  padding: 40px;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 20px;
-  backdrop-filter: blur(10px);
-  background: rgba(0, 0, 0, 0.3);
+  padding: 30px 20px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* Стилізація поточної погоди */
+.current-weather {
   text-align: center;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
-  z-index: 1;
+  margin-bottom: 30px;
 }
 
 .city {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
-  letter-spacing: 1px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
-.weather-icon i {
-  font-size: 72px;
-  margin-bottom: 20px;
+.current-details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.temperature {
+#weather-icon {
+  font-size: 64px;
+  margin-right: 15px;
+}
+
+.temp {
   font-size: 64px;
   font-weight: 300;
-  margin-bottom: 10px;
 }
 
 .description {
   font-size: 20px;
-  font-weight: 300;
   text-transform: capitalize;
+  margin-top: 10px;
+}
+
+/* Прогноз */
+.forecast {
+  text-align: center;
+}
+
+.forecast h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.forecast-container {
+  display: flex;
+  justify-content: space-between;
+  overflow-x: auto;
+}
+
+.forecast-day {
+  flex: 1 0 auto;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 5px;
+  padding: 15px;
+  border-radius: 15px;
+  min-width: 60px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.forecast-day .day {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.forecast-day .icon {
+  font-size: 36px;
+  margin-bottom: 5px;
+}
+
+.forecast-day .temp {
+  font-size: 20px;
+  font-weight: 300;
 }
