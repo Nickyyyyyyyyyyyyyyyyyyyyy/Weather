@@ -3,66 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Прогноз Погоди</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Погода</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <main class="weather-app">
-        <header class="current-weather">
-            <div class="location" id="location">--</div>
-            <div class="temperature" id="current-temp">-°</div>
-            <div class="description" id="current-desc">Завантаження...</div>
-            <div class="high-low">
-                <span id="current-high">Макс: -°</span>
-                <span id="current-low">Мін: -°</span>
-            </div>
-             <form id="search-form" class="search-form">
-                <input type="text" id="search-input" class="search-input" placeholder="Пошук міста..." aria-label="Пошук міста">
-                <button type="submit" class="search-button" aria-label="Знайти">🔍</button> </form>
-             <div class="error-message" id="current-error"></div>
-        </header>
-
-        <section class="hourly-forecast card">
-            <h2>Погодинний прогноз</h2>
-            <div class="status-message loading-indicator" id="hourly-loading">Завантаження...</div>
-            <div class="status-message error-message" id="hourly-error"></div>
-            <div class="hourly-scroll" id="hourly-scroll-container">
-                </div>
-        </section>
-
-        <section class="daily-forecast card">
-            <h2>Прогноз на 5 днів</h2>
-             <div class="status-message loading-indicator" id="daily-loading">Завантаження...</div>
-             <div class="status-message error-message" id="daily-error"></div>
-            <ul class="daily-list" id="daily-list-container">
-                </ul>
-        </section>
-
-        <section class="details card">
-             <h2>Додаткові відомості</h2>
-             <div class="details-grid">
-                 <div class="detail-item">
-                     <span class="label">Відчувається як</span>
-                     <span class="value" id="feels-like">-°</span>
-                 </div>
-                 <div class="detail-item">
-                     <span class="label">Вологість</span>
-                     <span class="value" id="humidity">-%</span>
-                 </div>
-                  <div class="detail-item">
-                     <span class="label">Вітер</span>
-                     <span class="value" id="wind">- м/с</span>
-                 </div>
-                 <div class="detail-item">
-                     <span class="label">Тиск</span>
-                     <span class="value" id="pressure">- гПа</span>
-                 </div>
-             </div>
-        </section>
-
-    </main> <script src="script.js"></script>
+    <div class="weather-container">
+        <h1>Поточна погода</h1>
+        <p id="temperature">Завантаження...</p>
+        <p id="description"></p>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
