@@ -10,17 +10,57 @@ html {
 }
 
 body {
-    /* Більш м'який градієнт, схожий на ранкові/денні відтінки Apple Weather */
+    /* Default gradient */
     background: linear-gradient(to bottom, #87b5e0, #5a8ec7);
-    font-family: 'Inter', -apple-system, BlinkMacMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* Залишаємо Inter, додаємо системні шрифти Apple */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: #ffffff;
     line-height: 1.5;
     min-height: 100vh;
     padding: 20px; /* Збільшено відступ */
-    display: flex; /* Центруємо контент */
+    display: flex;
     justify-content: center;
-    align-items: flex-start; /* Вирівнюємо зверху */
+    align-items: flex-start;
+    /* Add transition for smooth background change */
+    transition: background 1s ease;
 }
+
+/* --- Dynamic Background Gradients (Apple-like) --- */
+/* Clear / Sunny */
+body.weather-clear {
+    background: linear-gradient(to bottom, #87ceeb, #4682b4); /* Sky blue */
+}
+
+/* Clouds */
+body.weather-clouds {
+    background: linear-gradient(to bottom, #b0c4de, #778899); /* Light steel blue to gray */
+}
+
+/* Rain / Drizzle */
+body.weather-rain,
+body.weather-drizzle {
+    background: linear-gradient(to bottom, #6495ed, #4682b4); /* Cornflower blue to steel blue */
+}
+
+/* Thunderstorm */
+body.weather-thunderstorm {
+    background: linear-gradient(to bottom, #483d8b, #191970); /* Dark slate blue to midnight blue */
+}
+
+/* Snow */
+body.weather-snow {
+    background: linear-gradient(to bottom, #e0ffff, #b0c4de); /* Azure to light steel blue */
+}
+
+/* Atmosphere (Mist, Fog, Haze, etc.) */
+body.weather-atmosphere {
+     background: linear-gradient(to bottom, #c0c0c0, #808080); /* Silver to gray */
+}
+
+/* Default (if condition is unknown or error) */
+body.weather-default {
+    background: linear-gradient(to bottom, #87b5e0, #5a8ec7); /* Original default */
+}
+
 
 .weather-app {
     max-width: 650px; /* Трохи збільшено ширину */
