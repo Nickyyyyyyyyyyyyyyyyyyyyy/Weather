@@ -10,135 +10,159 @@ html {
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: linear-gradient(to bottom, #4a6a8c, #3a4e6f);
+    /* Більш м'який градієнт, схожий на ранкові/денні відтінки Apple Weather */
+    background: linear-gradient(to bottom, #87b5e0, #5a8ec7);
+    font-family: 'Inter', -apple-system, BlinkMacMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* Залишаємо Inter, додаємо системні шрифти Apple */
     color: #ffffff;
     line-height: 1.5;
     min-height: 100vh;
-    padding: 15px;
+    padding: 20px; /* Збільшено відступ */
+    display: flex; /* Центруємо контент */
+    justify-content: center;
+    align-items: flex-start; /* Вирівнюємо зверху */
 }
 
 .weather-app {
-    max-width: 600px;
+    max-width: 650px; /* Трохи збільшено ширину */
+    width: 100%; /* Займає всю доступну ширину до max-width */
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px; /* Збільшено відстань між секціями */
 }
 
 /* --- Поточна погода --- */
 .current-weather {
     text-align: center;
-    padding: 10px 0 0 0; /* Зменшено відступ знизу */
-    margin-bottom: 10px;
+    padding: 20px 0; /* Більший вертикальний відступ */
+    margin-bottom: 10px; /* Збільшено відступ знизу */
 }
 
 .location {
-    font-size: 1.9rem;
+    font-size: 2.4rem; /* Збільшено розмір */
     font-weight: 600;
-    margin-bottom: 5px;
-    min-height: 1.2em; /* Резерв місця під час завантаження */
+    margin-bottom: 8px; /* Збільшено відступ */
+    min-height: 1.3em;
+    color: rgba(255, 255, 255, 0.95); /* Трохи менша прозорість */
 }
 
 .temperature {
-    font-size: 4.8rem;
-    font-weight: 300;
+    font-size: 6rem; /* Значно збільшено розмір для основного елементу */
+    font-weight: 300; /* Легка вага шрифту */
     margin-bottom: 0px;
     line-height: 1;
     min-height: 1.1em;
 }
 
 .description {
-    font-size: 1.3rem;
+    font-size: 1.4rem; /* Збільшено розмір */
     font-weight: 500;
-    margin-bottom: 10px;
-    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 15px; /* Збільшено відступ */
+    color: rgba(255, 255, 255, 0.9); /* Трохи менша прозорість */
     min-height: 1.2em;
 }
 
 .high-low {
-    font-size: 1.2rem;
+    font-size: 1.3rem; /* Збільшено розмір */
     font-weight: 600;
     color: rgba(255, 255, 255, 0.95);
     min-height: 1.2em;
-    margin-bottom: 15px; /* Відступ перед пошуком */
+    margin-bottom: 25px; /* Значний відступ перед пошуком */
 }
 
 .high-low span {
-    margin: 0 8px;
+    margin: 0 10px; /* Збільшено горизонтальний відступ */
 }
 
 /* --- Форма пошуку --- */
 .search-form {
-    display: flex; /* Розмістити інпут і кнопку в ряд */
-    justify-content: center; /* Центрувати елементи */
+    display: flex;
+    justify-content: center;
     align-items: center;
-    margin: 0 auto 10px auto; /* Відступи */
-    max-width: 350px; /* Обмеження ширини */
-    width: 90%;
+    margin: 0 auto 20px auto; /* Збільшено відступи */
+    max-width: 400px; /* Трохи ширше поле пошуку */
+    width: 95%; /* Займає більше ширини на малих екранах */
+    background-color: rgba(255, 255, 255, 0.15); /* Напівпрозорий білий фон */
+    border-radius: 25px; /* Більше округлення */
+    overflow: hidden; /* Щоб внутрішні елементи не вилазили за округлення */
+    padding: 5px; /* Невеликий внутрішній відступ */
 }
 
 .search-input {
-    flex-grow: 1; /* Інпут займає доступний простір */
+    flex-grow: 1;
     padding: 10px 15px;
-    border-radius: 20px 0 0 20px; /* Округлення зліва */
+    border-radius: 20px; /* Повне округлення (якщо кнопка прихована) */
     border: none;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: transparent; /* Прозорий фон, оскільки фон є у обгортки */
     color: #ffffff;
     font-size: 1rem;
     font-weight: 500;
     outline: none;
-    text-align: left; /* Вирівнювання тексту зліва */
+    text-align: center; /* Центруємо текст в інпуті */
 }
+/* Якщо ви хочете, щоб кнопка була видимою, стилі інпуту мають бути: */
+/*
+.search-input {
+     ... інші стилі ...
+     border-radius: 20px 0 0 20px; // Округлення зліва
+     text-align: left;
+     padding: 10px 0px 10px 15px; // Відступ ліворуч, якщо кнопка є
+}
+*/
+
 .search-input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.6); /* Трохи світліший плейсхолдер */
     font-weight: 400;
 }
 
 .search-button {
-    padding: 10px 12px;
+    padding: 10px 15px; /* Більший падінг для кращого вигляду */
     border: none;
-    background-color: rgba(255, 255, 255, 0.25); /* Трохи інший фон */
-    color: #ffffff;
-    border-radius: 0 20px 20px 0; /* Округлення справа */
+    background-color: transparent; /* Прозорий фон */
+    color: rgba(255, 255, 255, 0.9); /* Колір іконки */
+    border-radius: 20px; /* Округлення кнопки */
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1.2rem; /* Більша іконка */
     outline: none;
-    transition: background-color 0.2s ease;
+    transition: color 0.2s ease; /* Анімація кольору */
 }
 .search-button:hover {
-    background-color: rgba(255, 255, 255, 0.35);
+    color: #ffffff; /* Колір при наведенні */
 }
-/* Якщо кнопка не потрібна візуально:
+/* Зазвичай в Apple Search Bar кнопка прихована і пошук спрацьовує по Enter */
+/*
 .search-button {
     display: none;
 }
 .search-input {
     border-radius: 20px; // Повне округлення інпуту
     text-align: center;
+    padding: 10px 15px; // Відступи з обох боків
 }
 */
 
+
 /* --- Картки --- */
 .card {
-    background-color: rgba(255, 255, 255, 0.1);
+    /* Більш виражений ефект матового скла */
+    background-color: rgba(255, 255, 255, 0.15); /* Напівпрозорий білий фон */
     border-radius: 15px;
-    padding: 15px;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    position: relative; /* Для позиціонування повідомлень */
-    overflow: hidden; /* Щоб повідомлення не вилазили */
+    padding: 15px 20px; /* Збільшено горизонтальний падінг */
+    backdrop-filter: blur(25px); /* Сильніше розмиття */
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.2); /* М'якший білий бордюр */
+    position: relative;
+    overflow: hidden;
 }
 
 .card h2 {
-    font-size: 0.9rem;
+    font-size: 1rem; /* Трохи збільшено розмір заголовка */
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 15px; /* Збільшено відступ */
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.8);
-    padding-bottom: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.85); /* Менша прозорість */
+    padding-bottom: 10px; /* Збільшено відступ знизу */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25); /* Яскравіший бордюр */
 }
 
 /* --- Повідомлення стану (Завантаження/Помилка) --- */
@@ -146,91 +170,120 @@ body {
     padding: 10px;
     text-align: center;
     font-weight: 500;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    display: none; /* Сховано за замовчуванням */
+    border-radius: 8px; /* Більше округлення */
+    margin-bottom: 15px; /* Збільшено відступ */
+    display: none;
+    font-size: 0.95rem;
 }
 .loading-indicator {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.7); /* М'якший колір */
 }
 .error-message {
-    color: #ffdddd; /* Світло-червоний текст */
-    background-color: rgba(200, 0, 0, 0.3); /* Напівпрозорий червоний фон */
+    color: #ffffff; /* Білий текст */
+    background-color: rgba(255, 0, 0, 0.4); /* Напівпрозорий червоний фон */
 }
-#current-error { /* Помилка для поточної погоди (не в картці) */
-     color: #ffdddd;
+#current-error { /* Помилка для поточної погоди */
+     color: rgba(255, 255, 255, 0.9); /* Білий текст */
      font-weight: 500;
-     margin-top: 5px;
+     margin-top: 10px; /* Збільшено відступ */
      min-height: 1.2em;
+     text-align: center; /* Центруємо текст помилки */
+     font-size: 1rem;
 }
 
 /* --- Погодинний прогноз --- */
 .hourly-forecast .hourly-scroll {
     display: flex;
     overflow-x: auto;
-    padding-bottom: 10px;
-    gap: 15px;
-    min-height: 80px; /* Резерв місця під час завантаження */
+    padding-bottom: 15px; /* Збільшено відступ знизу */
+    gap: 20px; /* Збільшено відстань між елементами */
+    min-height: 90px; /* Більше резерв місця */
+    /* Стилізація скролбару */
+    scrollbar-width: thin; /* Для Firefox */
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent; /* Для Firefox */
 }
-.hourly-scroll::-webkit-scrollbar { height: 5px; }
-.hourly-scroll::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.3); border-radius: 10px; }
+/* Стилізація скролбару для Webkit (Chrome, Safari) */
+.hourly-scroll::-webkit-scrollbar { height: 6px; } /* Трохи товще */
+.hourly-scroll::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.4); border-radius: 10px; } /* Трохи яскравіший */
 .hourly-scroll::-webkit-scrollbar-track { background-color: transparent; }
 
 .hour-item {
     flex: 0 0 auto;
-    min-width: 65px;
+    min-width: 70px; /* Трохи ширше */
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 8px; /* Збільшено відстань між елементами */
 }
-.hour-item .time { font-size: 0.9rem; font-weight: 600; color: rgba(255, 255, 255, 0.9); }
-.hour-item .icon { font-size: 1.7rem; }
-.hour-item .temp { font-size: 1.2rem; font-weight: 600; }
+.hour-item .time { font-size: 0.95rem; font-weight: 600; color: rgba(255, 255, 255, 0.9); }
+/* Потрібно використовувати іконки замість тексту/емодзі */
+.hour-item .icon { font-size: 2rem; } /* Збільшено розмір іконки */
+.hour-item .temp { font-size: 1.3rem; font-weight: 600; } /* Збільшено розмір температури */
 
 /* --- Денний прогноз --- */
 .daily-forecast .daily-list {
     list-style: none;
-    min-height: 150px; /* Резерв місця */
+    min-height: 180px; /* Більше резерв місця */
 }
 
 .day-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 11px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    gap: 10px;
+    padding: 12px 0; /* Збільшено вертикальний падінг */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* М'якший бордюр */
+    gap: 15px; /* Збільшено відстань */
 }
 .day-item:last-child { border-bottom: none; }
 
-.day-item .day-name { flex-basis: 70px; font-weight: 600; font-size: 1.05rem; }
-.day-item .icon { font-size: 1.5rem; flex-basis: 35px; text-align: center; }
+.day-item .day-name { flex-basis: 80px; font-weight: 600; font-size: 1.1rem; color: rgba(255, 255, 255, 0.9); }
+/* Знову ж таки, потрібні іконки */
+.day-item .icon { font-size: 1.8rem; flex-basis: 40px; text-align: center; } /* Збільшено розмір іконки та базу */
 .day-item .low-temp,
-.day-item .high-temp { flex-basis: 40px; text-align: right; font-weight: 600; font-size: 1.05rem; }
-.day-item .low-temp { color: rgba(255, 255, 255, 0.8); text-align: left; }
+.day-item .high-temp { flex-basis: 50px; text-align: right; font-weight: 600; font-size: 1.1rem; } /* Збільшено базу та розмір */
+.day-item .low-temp { color: rgba(255, 255, 255, 0.7); text-align: left; /* М'якший колір для мінімальної */ }
 
 .temp-bar {
-    flex-grow: 1; height: 5px; background-color: rgba(0, 0, 0, 0.2);
+    flex-grow: 1; height: 5px; background-color: rgba(0, 0, 0, 0.15); /* Темніший напівпрозорий фон */
     border-radius: 3px; margin: 0 10px; overflow: hidden; position: relative;
 }
 .temp-range {
-    height: 100%; background: linear-gradient(to right, #87ceeb, #ffcc00, #ff6347);
-    border-radius: 3px; position: absolute; top: 0; left: 0;
+    /* Градієнт може бути простішим або відповідати глобальним діапазонам */
+    /* Використовуємо більш спокійні кольори */
+    background: linear-gradient(to right, #a0ccf0, #ffe082, #ff9e80);
+    height: 100%;
+    border-radius: 3px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Ширина та відступ встановлюються в JS */
 }
 
 /* --- Додаткові деталі --- */
 .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.detail-item { background-color: rgba(0, 0, 0, 0.1); padding: 15px; border-radius: 10px; text-align: center; }
-.detail-item .label { display: block; font-size: 0.85rem; color: rgba(255, 255, 255, 0.75); margin-bottom: 5px; text-transform: uppercase; font-weight: 600; }
-.detail-item .value { display: block; font-size: 1.5rem; font-weight: 600; min-height: 1.2em; }
+.detail-item {
+     /* Напівпрозорий фон, але трохи темніший за картки */
+    background-color: rgba(0, 0, 0, 0.15);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+.detail-item .label { display: block; font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); margin-bottom: 8px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; } /* Менший розмір, світліший колір, збільшений відступ, інтервали */
+.detail-item .value { display: block; font-size: 1.6rem; font-weight: 600; min-height: 1.2em; } /* Більший розмір значення */
 
 /* --- Адаптивність --- */
 @media (min-width: 768px) {
-    body { padding: 30px; }
-    .location { font-size: 2.3rem; }
-    .temperature { font-size: 6rem; }
-    .description, .high-low { font-size: 1.4rem; }
-    .details-grid { grid-template-columns: repeat(4, 1fr); }
+    body { padding: 40px; } /* Більший відступ */
+    .weather-app { gap: 25px; } /* Збільшено відстань між секціями */
+    .current-weather { padding: 30px 0; }
+    .location { font-size: 2.8rem; }
+    .temperature { font-size: 7rem; }
+    .description { font-size: 1.6rem; }
+    .high-low { font-size: 1.4rem; margin-bottom: 30px; }
+    .search-form { max-width: 450px; }
+
+    /* Збільшення кількості колонок для деталей на широких екранах */
+    .details-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
 }
+
