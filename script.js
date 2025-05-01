@@ -30,7 +30,51 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     const currentErrorElement = document.getElementById('current-error');
 
-    // --- Функції ---
+    // --- Допоміжні функції ---
+
+     /**
+     * Повертає назву дня тижня
+     * @param {Date} date - Об'єкт Date
+     * @returns {string} Назва дня тижня (напр., "ПН")
+     */
+    function getDayName(date) {
+        const days = ['НД', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
+        return days[date.getDay()];
+    }
+
+    /**
+     * Повертає іконку погоди на основі коду OpenWeatherMap
+     * !!! Потрібно замінити на SVG або icon font для кращого вигляду !!!
+     * @param {string} iconCode - Код іконки від OpenWeatherMap (напр., '01d')
+     * @returns {string} Емодзі або інший представник іконки
+     */
+    function getWeatherIcon(iconCode) {
+        // Це базові емодзі. Рекомендовано використовувати повноцінний погодний шрифт або SVG-іконки.
+        const iconMap = {
+            '01d': '☀️', // Clear sky (day)
+            '01n': '🌙', // Clear sky (night)
+            '02d': '🌤️', // Few clouds (day)
+            '02n': '☁️', // Few clouds (night)
+            '03d': '☁️', // Scattered clouds
+            '03n': '☁️', // Scattered clouds
+            '04d': '☁️', // Broken clouds
+            '04n': '☁️', // Broken clouds
+            '09d': '🌧️', // Shower rain (day)
+            '09n': '🌧️', // Shower rain (night)
+            '10d': '🌦️', // Rain (day)
+            '10n': '🌧️', // Rain (night)
+            '11d': '⛈️', // Thunderstorm (day)
+            '11n': '⛈️', // Thunderstorm (night)
+            '13d': '❄️', // Snow (day)
+            '13n': '❄️', // Snow (night)
+            '50d': '🌫️', // Mist (day)
+            '50n': '🌫️'  // Mist (night)
+        };
+        return iconMap[iconCode] || '❓'; // Повертає іконку або знак питання, якщо код невідомий
+    }
+
+
+    // --- Функції отримання та оновлення UI ---
 
     /**
      * Універсальна функція для виконання запитів до API
@@ -55,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (response.status === 429) {
                 errorMessage = "Помилка: Перевищено ліміт запитів до API.";
             } else if (errorData.message) {
-                errorMessage += ` (${errorData.message})`;
+                errorMessage += `: ${errorData.message}`;
             }
             throw new Error(errorMessage);
         }
@@ -63,23 +107,106 @@ document.addEventListener('DOMContentLoaded', () => {
         return await response.json();
     }
 
-    /**
-     * Оновлює блок поточної погоди
-     * @param {object} data - Дані з /weather API
+     /**
+     * Розраховує мінімальну та максимальну температуру для поточного календарного дня з масиву прогнозу.
+     * Використовує температуру (`temp`) з кожного 3-годинного запису в межах дня.
+     * @param {Array} forecastList - Масив 'list' з /forecast API
+     * @returns {{min: number|null, max: number|null}} - Об'єкт з мінімальною та максимальною температурою дня або null
      */
-    function updateCurrentWeatherUI(data) {
-        locationElement.textContent = data.name;
-        currentTempElement.textContent = `${Math.round(data.main.temp)}°`;
-        currentDescElement.textContent = data.weather[0].description;
-        currentHighElement.textContent = `Макс: ${Math.round(data.main.temp_max)}°`;
-        currentLowElement.textContent = `Мін: ${Math.round(data.main.temp_min)}°`;
-        feelsLikeElement.textContent = `${Math.round(data.main.feels_like)}°`;
-        humidityElement.textContent = `${data.main.humidity}%`;
-        windElement.textContent = `${data.wind.speed.toFixed(1)} м/с`;
-        pressureElement.textContent = `${data.main.pressure} гПа`;
-        currentErrorElement.textContent = ''; // Очистити попередні помилки
-        currentErrorElement.style.display = 'none';
+    function getCurrentDayMinMax(forecastList) {
+        if (!forecastList || forecastList.length === 0) {
+            return { min: null, max: null };
+        }
+
+        // Визначаємо дату першого запису прогнозу - це наш "поточний день" для фільтрації
+        const firstForecastDate = new Date(forecastList[0].dt * 1000);
+        const targetDay = firstForecastDate.getDate();
+        const targetMonth = firstForecastDate.getMonth();
+        const targetYear = firstForecastDate.getFullYear();
+
+        // Фільтруємо записи, що належать до цього ж календарного дня
+        const currentDayForecasts = forecastList.filter(item => {
+            const itemDate = new Date(item.dt * 1000);
+            return itemDate.getDate() === targetDay &&
+                   itemDate.getMonth() === targetMonth &&
+                   itemDate.getFullYear() === targetYear;
+        });
+
+        if (currentDayForecasts.length === 0) {
+             console.warn("Не знайдено записів прогнозу для поточного дня.");
+             return { min: null, max: null };
+        }
+
+        // Знаходимо мінімальну та максимальну температуру серед відфільтрованих записів
+        let minTemp = Infinity;
+        let maxTemp = -Infinity;
+
+        currentDayForecasts.forEach(item => {
+             // Використовуємо item.main.temp, оскільки temp_min/temp_max в прогнозних записах
+             // зазвичай стосуються діапазону протягом 3-годинного вікна, а не дня загалом.
+             minTemp = Math.min(minTemp, item.main.temp);
+             maxTemp = Math.max(maxTemp, item.main.temp);
+        });
+
+        return {
+            min: minTemp === Infinity ? null : Math.round(minTemp),
+            max: maxTemp === -Infinity ? null : Math.round(maxTemp)
+        };
     }
+
+    /**
+     * Встановлює клас на елементі body для зміни фонового градієнта відповідно до погоди.
+     * @param {string} weatherMain - Головний опис погоди (напр., 'Clear', 'Clouds', 'Rain')
+     */
+    function setWeatherBackground(weatherMain) {
+        const body = document.body;
+        // Видаляємо всі попередні погодні класи
+        body.className = body.className.split(' ').filter(cls => !cls.startsWith('weather-')).join(' ');
+
+        // Додаємо новий клас відповідно до погоди
+        let weatherClass = '';
+        if (!weatherMain) {
+             weatherClass = 'weather-default'; // Якщо погода не визначена
+        } else {
+            switch (weatherMain.toLowerCase()) {
+                case 'clear':
+                    weatherClass = 'weather-clear';
+                    break;
+                case 'clouds':
+                    weatherClass = 'weather-clouds';
+                    break;
+                case 'rain':
+                case 'drizzle':
+                    weatherClass = 'weather-rain';
+                    break;
+                case 'thunderstorm':
+                    weatherClass = 'weather-thunderstorm';
+                    break;
+                case 'snow':
+                    weatherClass = 'weather-snow';
+                    break;
+                case 'mist':
+                case 'smoke':
+                case 'haze':
+                case 'dust':
+                case 'fog':
+                case 'sand':
+                case 'ash':
+                case 'squall':
+                case 'tornado':
+                    weatherClass = 'weather-atmosphere';
+                    break;
+                default:
+                    weatherClass = 'weather-default'; // Для інших умов
+            }
+        }
+
+        if (weatherClass) {
+            body.classList.add(weatherClass);
+        }
+        console.log(`Встановлено клас фону погоди: ${weatherClass}`);
+    }
+
 
     /**
      * Оновлює блок погодинного прогнозу
@@ -90,12 +217,14 @@ document.addEventListener('DOMContentLoaded', () => {
         hourlyErrorElement.style.display = 'none'; // Сховати помилку
         hourlyLoadingElement.style.display = 'none'; // Сховати завантаження
 
-        if (!hourlyList || hourlyList.length === 0) {
+        // Виводимо перші 8 записів (приблизно 24 години)
+        const next24Hours = hourlyList.slice(0, 8);
+
+        if (!next24Hours || next24Hours.length === 0) {
             showError(hourlyErrorElement, "Немає даних для погодинного прогнозу.");
             return;
         }
 
-        const next24Hours = hourlyList.slice(0, 8); // Перші 8 записів (24 години)
 
         next24Hours.forEach((item, index) => {
             const dateTime = new Date(item.dt * 1000);
@@ -124,184 +253,213 @@ document.addEventListener('DOMContentLoaded', () => {
         dailyErrorElement.style.display = 'none'; // Сховати помилку
         dailyLoadingElement.style.display = 'none'; // Сховати завантаження
 
-        if (!list || list.length === 0) {
+         if (!list || list.length === 0) {
             showError(dailyErrorElement, "Немає даних для денного прогнозу.");
             return;
         }
 
-        // 1. Агрегувати дані по днях
+
+        // 1. Агрегувати дані по днях (з 3-годинних записів)
         const dailySummaries = {};
         let overallMinTemp = Infinity;
         let overallMaxTemp = -Infinity;
 
         list.forEach(item => {
-            const date = item.dt_txt.split(' ')[0];
+            const date = item.dt_txt.split(' ')[0]; // Отримуємо дату "YYYY-MM-DD"
             const temp = item.main.temp;
 
             if (!dailySummaries[date]) {
                 dailySummaries[date] = {
-                    temps: [],
-                    icons: [],
-                    dt: item.dt // Зберігаємо timestamp першого запису дня
+                    temps: [], // Температури всіх записів за день
+                    icons: [], // Іконки всіх записів за день
+                    dt: item.dt // Timestamp першого запису дня (для отримання назви дня)
                 };
             }
             dailySummaries[date].temps.push(temp);
             dailySummaries[date].icons.push(item.weather[0].icon);
 
-            // Оновлюємо загальний мін/макс для шкали
+            // Оновлюємо загальний мін/макс для шкали бару
             if (temp < overallMinTemp) overallMinTemp = temp;
             if (temp > overallMaxTemp) overallMaxTemp = temp;
         });
 
-        // 2. Створити HTML для кожного дня
-        const overallTempRange = overallMaxTemp - overallMinTemp; // Загальний діапазон температур
+        // 2. Визначаємо загальний діапазон температур для масштабування смужки
+        const overallTempRange = overallMaxTemp - overallMinTemp;
 
-        for (const date in dailySummaries) {
+        // 3. Створюємо HTML для кожного дня
+        // Пропускаємо перший день, оскільки його мін/макс ми відображаємо окремо в головному блоці
+        // Або можемо включити його, але тоді в головному блоці показувати "Прогноз на сьогодні"
+        // Давайте включимо всі дні з прогнозу, включаючи перший.
+        // Ключі dailySummaries - це відсортовані дати завдяки формату 'YYYY-MM-DD'
+
+        Object.keys(dailySummaries).forEach((date, index) => {
             const dayData = dailySummaries[date];
             const minTemp = Math.round(Math.min(...dayData.temps));
             const maxTemp = Math.round(Math.max(...dayData.temps));
 
-            // Вибираємо іконку для середини дня (близько 12:00-15:00) або найчастішу
+            // Вибираємо іконку для середини дня або найчастішу
+            // Простий підхід: беремо іконку з запису, найближчого до 12:00 або з середини масиву
             const middayIcon = dayData.icons[Math.floor(dayData.icons.length / 2)] || dayData.icons[0];
-            const dayName = getDayName(new Date(dayData.dt * 1000));
+            const dayName = index === 0 ? "Сьогодні" : getDayName(new Date(dayData.dt * 1000));
 
-            // Розрахунок для смужки температури відносно загального діапазону
+
+            // Розрахунок для смужки температури відносно загального діапазону всіх днів
             let offsetPercent = 0;
-            let widthPercent = 10; // Мінімальна ширина для видимості
+            let widthPercent = 5; // Мінімальна ширина для видимості смужки
             if (overallTempRange > 0) { // Уникнути ділення на нуль
                  offsetPercent = ((minTemp - overallMinTemp) / overallTempRange) * 100;
                  widthPercent = ((maxTemp - minTemp) / overallTempRange) * 100;
             }
-             // Обмеження значень від 0 до 100
-            offsetPercent = Math.max(0, Math.min(100 - widthPercent, offsetPercent));
-            widthPercent = Math.max(5, Math.min(100, widthPercent)); // мін. 5% ширини
+             // Обмеження значень від 0 до 100 та забезпечення мінімальної ширини
+            offsetPercent = Math.max(0, offsetPercent);
+            offsetPercent = Math.min(offsetPercent, 100 - widthPercent); // Щоб смужка не виходила за межі
+
+            widthPercent = Math.max(5, widthPercent); // Мінімум 5% ширини
+             widthPercent = Math.min(widthPercent, 100); // Максимум 100%
+
+             // Якщо min == max і overallTempRange > 0, widthPercent може бути 0. Встановлюємо мін.
+             if (minTemp === maxTemp && overallTempRange > 0) widthPercent = 5;
+
 
             const dayItemLi = document.createElement('li');
             dayItemLi.className = 'day-item';
             dayItemLi.innerHTML = `
-                <span class="day-name">${dayName}</span>
-                <span class="icon">${getWeatherIcon(middayIcon)}</span>
-                <span class="low-temp">${minTemp}°</span>
+                <div class="day-name">${dayName}</div>
+                <div class="icon">${getWeatherIcon(middayIcon)}</div>
+                <div class="low-temp">${minTemp}°</div>
                 <div class="temp-bar">
-                     <div class="temp-range" style="margin-left: ${offsetPercent.toFixed(1)}%; width: ${widthPercent.toFixed(1)}%;"></div>
+                    <div class="temp-range" style="width: ${widthPercent}%; margin-left: ${offsetPercent}%;"></div>
                 </div>
-                <span class="high-temp">${maxTemp}°</span>
+                <div class="high-temp">${maxTemp}°</div>
             `;
             dailyListContainer.appendChild(dayItemLi);
+        });
+    }
+
+
+    /**
+     * Виконує запити до API та оновлює весь інтерфейс для заданого міста
+     * @param {string} city - Назва міста
+     */
+    async function updateWeatherForCity(city) {
+        console.log(`Оновлення погоди для: ${city}`);
+
+        // Скидаємо UI та показуємо індикатори завантаження
+        showLoading();
+        hideErrors(); // Приховуємо попередні помилки при новому пошуку
+
+
+        try {
+            // 1. Отримуємо поточну погоду
+            const currentWeather = await fetchWeatherData('weather', `q=${city}`);
+            console.log("Поточна погода:", currentWeather);
+
+            // 2. Отримуємо прогноз на 5 днів (з 3-годинним інтервалом)
+            const forecast = await fetchWeatherData('forecast', `q=${city}`);
+            console.log("Прогноз:", forecast);
+            const forecastList = forecast.list; // Масив з 3-годинними записами
+
+            // --- Оновлення секції поточної погоди ---
+
+            // Розраховуємо мінімальну та максимальну температуру для поточного календарного дня з даних прогнозу
+            const currentDayTemps = getCurrentDayMinMax(forecastList);
+
+            // Оновлюємо UI використовуючи дані з currentWeather API та розраховані min/max дня з прогнозу
+            locationElement.textContent = currentWeather.name;
+            currentTempElement.textContent = `${Math.round(currentWeather.main.temp)}°`;
+            currentDescElement.textContent = currentWeather.weather[0].description;
+            feelsLikeElement.textContent = `${Math.round(currentWeather.main.feels_like)}°`;
+            humidityElement.textContent = `${currentWeather.main.humidity}%`;
+            windElement.textContent = `${currentWeather.wind.speed.toFixed(1)} м/с`;
+            pressureElement.textContent = `${currentWeather.main.pressure} гПа`;
+
+            // Використовуємо розраховані min/max дня з прогнозу, якщо вони доступні.
+            // Якщо ні (наприклад, порожній список прогнозу), використовуємо min/max з поточного запису погоди (це може бути не точний максимум/мінімум дня, але це хоч якісь дані).
+            currentHighElement.textContent = `Макс: ${currentDayTemps.max !== null ? currentDayTemps.max : Math.round(currentWeather.main.temp_max)}°`;
+            currentLowElement.textContent = `Мін: ${currentDayTemps.min !== null ? currentDayTemps.min : Math.round(currentWeather.main.temp_min)}°`;
+
+
+            // Встановлюємо фоновий градієнт відповідно до поточної погоди
+            setWeatherBackground(currentWeather.weather[0].main);
+
+
+            // --- Оновлення секції погодинного прогнозу ---
+            updateHourlyForecastUI(forecastList);
+
+
+            // --- Оновлення секції денного прогнозу ---
+            updateDailyForecastUI(forecastList);
+
+
+        } catch (error) {
+            console.error("Помилка під час оновлення погоди:", error);
+            // Показуємо повідомлення про помилку у відповідних секціях
+            showError(currentErrorElement, error.message);
+            // Очищаємо інші секції та показуємо помилки завантаження для них
+            resetUI(); // Очистити попередні дані
+            showError(hourlyErrorElement, "Не вдалося завантажити погодинний прогноз.");
+            showError(dailyErrorElement, "Не вдалося завантажити денний прогноз.");
+            // Приховуємо індикатори завантаження, бо сталася помилка
+            hideLoading();
+
+            // Скидаємо фон до дефолтного при помилці
+            setWeatherBackground('');
+
+        } finally {
+            // В кінці приховуємо всі індикатори завантаження
+            hideLoading();
         }
     }
 
-    /**
-     * Отримує коротку назву дня тижня
-     * @param {Date} date - Об'єкт Date
-     * @returns {string} - "Сьогодні" або скорочена назва дня (Пн, Вт, ...)
-     */
-    function getDayName(date) {
-        const today = new Date();
-        if (date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear()) {
-            return "Сьогодні";
-        }
-        const days = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
-        return days[date.getDay()];
+    // --- Допоміжні функції для керування станом UI ---
+
+    function showLoading() {
+         // Приховуємо попередні дані та помилки перед показом завантаження
+        resetUI();
+        hideErrors();
+
+        hourlyLoadingElement.style.display = 'block';
+        dailyLoadingElement.style.display = 'block';
+         // Можна також показати глобальний індикатор завантаження, якщо є
     }
 
-    /**
-     * Повертає символ Unicode для іконки погоди
-     * @param {string} iconCode - Код іконки від OpenWeatherMap
-     * @returns {string} - Символ іконки
-     */
-    function getWeatherIcon(iconCode) {
-        const iconMap = {
-            '01d': '☀️', '01n': '🌙', '02d': '🌤️', '02n': '☁️',
-            '03d': '☁️', '03n': '☁️', '04d': '☁️', '04n': '☁️',
-            '09d': '🌧️', '09n': '🌧️', '10d': '🌦️', '10n': '🌧️',
-            '11d': '⛈️', '11n': '⛈️', '13d': '❄️', '13n': '❄️',
-            '50d': '🌫️', '50n': '🌫️',
-        };
-        return iconMap[iconCode] || '❓';
+    function hideLoading() {
+        hourlyLoadingElement.style.display = 'none';
+        dailyLoadingElement.style.display = 'none';
+         // Приховуємо глобальний індикатор, якщо є
     }
 
-    /**
-     * Показує повідомлення про помилку в заданому елементі
-     * @param {HTMLElement} element - Елемент для відображення помилки
-     * @param {string} message - Текст помилки
-     */
     function showError(element, message) {
         if (element) {
             element.textContent = message;
             element.style.display = 'block';
         }
-         // Також показуємо помилку в головному блоці, якщо це помилка поточних даних
-         if (element === currentErrorElement || !element) {
-             currentErrorElement.textContent = message;
-             currentErrorElement.style.display = 'block';
-         }
     }
 
-    /**
-      * Головна функція для завантаження та відображення всієї погоди
-      * @param {string} city - Назва міста
-      */
-    async function loadWeather(city) {
-        console.log(`Завантаження погоди для: ${city}`);
-        // Показати індикатори завантаження, сховати помилки
+    function hideErrors() {
         currentErrorElement.style.display = 'none';
-        hourlyLoadingElement.style.display = 'block';
         hourlyErrorElement.style.display = 'none';
-        dailyLoadingElement.style.display = 'block';
         dailyErrorElement.style.display = 'none';
-        hourlyScrollContainer.innerHTML = ''; // Очистити старі дані
-        dailyListContainer.innerHTML = ''; // Очистити старі дані
-
-        try {
-            // 1. Завантажити поточну погоду
-            const currentData = await fetchWeatherData('weather', `q=${city}`);
-            updateCurrentWeatherUI(currentData);
-
-            // 2. Завантажити прогноз (після успішного завантаження поточної)
-            try { // Окремий try/catch для прогнозу, щоб помилка тут не зупинила показ поточної погоди
-                 const forecastData = await fetchWeatherData('forecast', `q=${city}`);
-                 updateHourlyForecastUI(forecastData.list);
-                 updateDailyForecastUI(forecastData.list);
-            } catch (forecastError) {
-                 console.error("Помилка завантаження прогнозу:", forecastError);
-                 showError(hourlyErrorElement, `Помилка прогнозу: ${forecastError.message}`);
-                 showError(dailyErrorElement, `Помилка прогнозу: ${forecastError.message}`);
-                 hourlyLoadingElement.style.display = 'none';
-                 dailyLoadingElement.style.display = 'none';
-            }
-
-        } catch (error) {
-            console.error("Головна помилка завантаження:", error);
-            // Сховати індикатори
-            hourlyLoadingElement.style.display = 'none';
-            dailyLoadingElement.style.display = 'none';
-            // Показати помилку в основному блоці та в блоках прогнозу
-            showError(currentErrorElement, error.message);
-            showError(hourlyErrorElement, "Не вдалося завантажити дані.");
-            showError(dailyErrorElement, "Не вдалося завантажити дані.");
-            // Можна скинути деякі поля до стану за замовчуванням
-            locationElement.textContent = "Помилка";
-            currentTempElement.textContent = "-°";
-            currentDescElement.textContent = "";
-        }
     }
+
+    function resetUI() {
+        // Скидає основні елементи UI до початкового стану
+        locationElement.textContent = '--';
+        currentTempElement.textContent = '-°';
+        currentDescElement.textContent = 'Завантаження...'; // Або 'Немає даних'
+        currentHighElement.textContent = 'Макс: -°';
+        currentLowElement.textContent = 'Мін: -°';
+        feelsLikeElement.textContent = '-°';
+        humidityElement.textContent = '-%';
+        windElement.textContent = '- м/с';
+        pressureElement.textContent = '- гПа';
+        hourlyScrollContainer.innerHTML = ''; // Очищає погодинний прогноз
+        dailyListContainer.innerHTML = ''; // Очищає денний прогноз
+         // Встановлюємо фон за замовчуванням
+        setWeatherBackground('');
+    }
+
 
     // --- Обробники подій ---
-    searchForm.addEventListener('submit', (event) => {
-        event.preventDefault(); // Заборонити стандартну відправку форми
-        const searchTerm = searchInput.value.trim();
-        if (searchTerm) {
-            loadWeather(searchTerm);
-            // searchInput.value = ''; // Очистити поле після пошуку (опціонально)
-        } else {
-            showError(currentErrorElement, "Будь ласка, введіть назву міста.");
-        }
-    });
 
-    // --- Початковий запуск ---
-    const initialCity = "Вінниця"; // Або можна взяти з геолокації чи іншого джерела
-    searchInput.value = initialCity; // Встановити початкове місто в полі пошуку
-    loadWeather(initialCity);
-
-});
+    // Обробка відправки 
